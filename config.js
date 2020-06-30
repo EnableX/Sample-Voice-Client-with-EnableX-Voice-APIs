@@ -1,0 +1,16 @@
+config={};
+config.app_name = 'YOUR APP NAME';
+config.app_id = 'APP_ID';
+config.app_key = 'APP_KEY';
+config.from = 'ENX_NUMBER';
+config.to = '911234567'; //The terminating number, Update this with proper number where the call needs to be terminated
+config.forward = '913434355'; //Call forward number
+config.language = 'en-IN';    //Text to speech language supported 
+config.voice = 'Female';      //Sample voice, only Male and Female are supported
+config.prompt_name = 'welcome-my-company'; //Make sure that this prompt is uploadded from the porta
+config.text = 'Welcome to Enablex'; //Welcome text to speech prompts 
+config.voicemenu='Please press one for sales, two for enquiry, three for accounts'; // A Sample voice menu
+config.timeout='Please press a digit to continue'; //Timeout prompt if there is no digits.
+config.maxretriesreached='I am sorry you have reached maximum retries'; //Maximum retries reached prompt in
+var module = module || {};
+module.exports = config;
