@@ -50,7 +50,7 @@ app.post("/events", (req, res, next) => {
     if(response !== null) {
       eventEmitter.emit('voicestateevent', response);
     } else {
-      console.error("["+voice_id+"] Not able to decrypt the message");
+      console.error("["+voice_id+"] Not able to parse the message");
     }
     res.statusCode = 200;
     res.send();
@@ -88,7 +88,7 @@ var voiceeventhandler = function(voiceevent) {
             }
             });
         }
-      } else if(voiceevent.prompt_ref ==='maxretryrech') {
+      } else if(voiceevent.prompt_ref ==='maxretryreach') {
           disconnectcall();
           shutdown();
       }else {

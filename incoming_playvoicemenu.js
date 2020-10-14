@@ -19,10 +19,16 @@ var server = app.listen(config.port, () => {
 
 
 app.post("/event", (req, res, next) => {
-    eventEmitter.emit('voicestateevent', req.body);
+  enxVoice.decryptpacket(req, function(response) {
+    if(response !== null) {
+      eventEmitter.emit('voicestateevent', response);
+    } else {
+      console.error("["+voice_id+"] Not able to parse the message");
+    }
     res.statusCode = 200;
     res.send();
     res.end();
+  });
 });
 
 let voice_id = '';
@@ -57,7 +63,7 @@ var voiceeventhandler = function(voiceevent) {
             }
             });
         }
-      } else if(voiceevent.prompt_ref ==='maxretryrech') {
+      } else if(voiceevent.prompt_ref ==='maxretryreach') {
           disconnectcall();
           shutdown();
       }else {
@@ -108,5 +114,3 @@ var shutdown = function() {
         process.exit(1);
     }, 10000);
 };
-
-
