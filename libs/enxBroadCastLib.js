@@ -2,7 +2,7 @@ const http = require('http');
 var app_id = null, app_key = null, app_name = null;
 var voice_url = 'localhost';
 var base_url = '/voice/v1/broadcast';
-var call_url = '/voice/v1/calls'
+var call_url = '/voice/v1/call'
 var crypto = require('crypto');
 
 exports.init = function(appid, appkey) {
@@ -34,11 +34,11 @@ exports.initiatecall = function(params, callback){
         "broadcastnumbersjson": params.broadcast_numbers_json,
         "from": params.from,
         "event_url": params.event_url,
-	"callhandler_url":params.callHandler_url,
-	"call_param": {
-		"intervalBetweenRetries":params.IntervalBetweenRetries,
-		"numberOfRetries":params.NumberOfRetries
-	}
+        "callhandler_url":params.callHandler_url,
+        "call_param": {
+            "intervalBetweenRetries":params.IntervalBetweenRetries,
+            "numberOfRetries":params.NumberOfRetries
+        }
     };
     if(params.owner_ref != undefined) 
       data['owner_ref'] = params.owner_ref;

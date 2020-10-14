@@ -44,7 +44,7 @@ exports.playvoicemenu = function(voice_id, callback) {
 
 exports.playmaxretryreached = function(voice_id, callback) {
     let maxretry  = {voice_id:voice_id, text:config.maxretriesreached, language:'en-IN',voice:'female', 
-                  prompt_ref:'maxretryrech'};
+                  prompt_ref:'maxretryreach'};
     enxVoice.playprompts(maxretry, function(ret, response) {
     let msg = JSON.parse(response);
     if(msg.status === "failed") {

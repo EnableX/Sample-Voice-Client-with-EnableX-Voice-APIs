@@ -1,7 +1,7 @@
 const https= require('https');
 var app_id = null, app_key = null, app_name = null;
 var voice_url = 'voice.enablex.io';
-var base_url = '/voice/v1/calls';
+var base_url = '/voice/v1/call';
 var crypto = require('crypto');
 
 exports.init = function(appid, appkey) {
@@ -140,33 +140,32 @@ exports.playvoicemenu = function(params, callback){
     if(params.voice_id === undefined)
         callback(false, "voice_id is undefined");
 
-    action["play"] = {};
-    action.play["dtmf"] = true;
-    action.play["interrupt"] = false;
+    action["dtmf"] = true;
+    action["interrupt"] = false;
 
     if(params.text !== undefined){
-        action.play["text"] = params.text;
+        action["text"] = params.text;
         if(params.voice !== undefined)
-            action.play["voice"] = params.voice;
+            action["voice"] = params.voice;
         else
             callback(false, "voice parameter is undefined");
         if(params.language !== undefined)
-            action.play["language"] = params.language;
+            action["language"] = params.language;
         else
             callback(false, "language parameter is undefined");
         if(params.prompt_ref != undefined) 
-          action.play['prompt_ref'] = params.prompt_ref;
+          action['prompt_ref'] = params.prompt_ref;
     } else if(params.prompt_name !== undefined){
-        action.play["prompt_name"] = params.prompt_name;
+        action["prompt_name"] = params.prompt_name;
         if(params.prompt_ref != undefined) 
-          action.play['prompt_ref'] = params.prompt_ref;
+          action['prompt_ref'] = params.prompt_ref;
     } else {
         callback(false, "prompt_name/text is undefined");  
     }
 
     var postData = JSON.stringify(action);
-    var path = base_url + '/' + params.voice_id;
-    makeVoiceAPICall(path, 'POST', postData, function(response){
+    var path = base_url + '/' + params.voice_id + '/play';
+    makeVoiceAPICall(path, 'PUT', postData, function(response){
       callback(true, response);
     }); 
 };
@@ -177,31 +176,30 @@ exports.playprompts = function(params, callback){
     
     if(params.voice_id === undefined)
         callback(false, "voice_id is undefined");
-    action.play = {};
     if(params.text !== undefined) {
-        action.play["text"] = params.text;
+        action["text"] = params.text;
         if(params.voice !== undefined)
-            action.play["voice"] = params.voice;
+            action["voice"] = params.voice;
         else
             callback(false, "voice parameter is undefined");
         if(params.language !== undefined)
-            action.play["language"] = params.language;
+            action["language"] = params.language;
         else
             callback(false, "language parameter is undefined");
         if(params.prompt_ref != undefined) 
-          action.play['prompt_ref'] = params.prompt_ref;
+          action['prompt_ref'] = params.prompt_ref;
     } else if(params.prompt_name !== undefined){
-        action.play["prompt_name"] = params.prompt_name;
+        action["prompt_name"] = params.prompt_name;
         if(params.prompt_ref != undefined) 
-          action.play['prompt_ref'] = params.prompt_ref;
+          action['prompt_ref'] = params.prompt_ref;
     } else {
         callback(false, "prompt_name/text is undefined");  
     }
     
 
     var postData = JSON.stringify(action);
-    var path = base_url + '/' + params.voice_id;
-    makeVoiceAPICall(path, 'POST', postData, function(response){
+    var path = base_url + '/' + params.voice_id + '/play';
+    makeVoiceAPICall(path, 'PUT', postData, function(response){
       callback(true, response);
     }); 
 };
@@ -218,14 +216,12 @@ exports.forwardcall = function(params, callback){
         callback(false, "from number is undefined in config");
   
     let connectCommand = JSON.stringify({
-        "connect":{
-            "from": params.from,
-            "to": params.to
-        }
+        "from": params.from,
+        "to": params.to
     });
 
-    var path = base_url + '/' + params.voice_id;
-    makeVoiceAPICall(path, 'POST', connectCommand, function(response){
+    var path = base_url + '/' + params.voice_id + '/connect';
+    makeVoiceAPICall(path, 'PUT', connectCommand, function(response){
         callback(true, response);
     }); 
 };
@@ -245,14 +241,13 @@ exports.startrecord = function(params, callback) {
     if(params.voice_id === undefined)
         callback(false, "voice_id is undefined");
     let options = {};
-    options["record"] = {};
-    options.record["start"] = true;
+    options["start"] = true;
     if(params.recording_name !== undefined)
-        options.record["recording_name"] = params.recording_name;
+        options["recording_name"] = params.recording_name;
 
     var recordCommand = JSON.stringify(options);
-    var path = base_url + '/' + params.voice_id;
-    makeVoiceAPICall(path, 'POST', recordCommand, function(response){
+    var path = base_url + '/' + params.voice_id + '/recording';
+    makeVoiceAPICall(path, 'PUT', recordCommand, function(response){
         callback(true, response);
     });
 };
@@ -262,11 +257,10 @@ exports.stoprecord = function(params, callback) {
     if(params.voice_id === undefined)
         callback(false, "voice_id is undefined");
     let options = {};
-    options["record"] = {};
-    options.record["stop"] = true;
+    options["stop"] = true;
     var recordCommand = JSON.stringify(options);
-    var path = base_url + '/' + params.voice_id;
-    makeVoiceAPICall(path, 'POST', recordCommand, function(response){
+    var path = base_url + '/' + params.voice_id + '/recording';
+    makeVoiceAPICall(path, 'PUT', recordCommand, function(response){
         callback(true, response);
     });
 };
@@ -305,11 +299,15 @@ var makeVoiceAPICall = function(voice_path, method, postData, callback){
 exports.decryptpacket = function(req, callback) {
   try {
     if(req.body) {
-      var key = crypto.createDecipher(req.headers['x-algoritm'], app_id);
-      var decryptedData = key.update(req.body['encrypted_data'], req.headers['x-format'], req.headers['x-encoding']);
-      decryptedData += key.final(req.headers['x-encoding']);
-      let voice_event = JSON.parse(decryptedData);
-      callback(voice_event);
+      if(req.headers['x-algoritm'] !== undefined){
+          var key = crypto.createDecipher(req.headers['x-algoritm'], app_id);
+          var decryptedData = key.update(req.body['encrypted_data'], req.headers['x-format'], req.headers['x-encoding']);
+          decryptedData += key.final(req.headers['x-encoding']);
+          let voice_event = JSON.parse(decryptedData);
+          callback(voice_event);
+      } else {
+          callback(req.body);
+      }
     } else
       callback(null);
   } catch (e) {

@@ -34,7 +34,7 @@ var server = app.listen(config.port, () => {
             voice_id = msg.voice_id; 
             console.log("[" + voice_id+"] Successfully initiated call to " + config.to);
       } else {
-            console.log("Making an outbound call to " + config.to + "falied, error response: " + JSON.stringify(response));
+            console.log("Making an outbound call to " + config.to + "failed, error response: " + JSON.stringify(response));
       }
     });
 })(); 
@@ -45,7 +45,7 @@ app.post("/events", (req, res, next) => {
     if(response !== null) {
       eventEmitter.emit('voicestateevent', response);
     } else {
-      console.error("["+voice_id+"] Not able to decrypt the message");
+      console.error("["+voice_id+"] Not able to parse the response message");
     }
     res.statusCode = 200;
     res.send();

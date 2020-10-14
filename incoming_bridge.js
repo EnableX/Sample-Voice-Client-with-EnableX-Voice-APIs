@@ -18,10 +18,16 @@ var server = app.listen(config.port, () => {
 
 
 app.post("/event", (req, res, next) => {
-  eventEmitter.emit('voicestateevent', req.body);
-  res.statusCode = 200;
-  res.send();
-  res.end();
+  enxVoice.decryptpacket(req, function(response) {
+      if(response !== null) {
+        eventEmitter.emit('voicestateevent', response);
+      } else {
+        console.error("["+voice_id+"] Not able to parse the message");
+      }
+      res.statusCode = 200;
+      res.send();
+      res.end();
+  });
 });
 
 let voice_id = '';
