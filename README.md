@@ -1,18 +1,19 @@
-# Sample Client and Walk through of Enablex Voice APIs.
-This repository contains the sample application for voice apis.
- 
-This application demonstrate the feature of the Enablex Voice APIs.
-1. Outbound play prompt
-1. Outbound play voice menu
-1. Outbound play text
-1. Outbound call bridging
-1. Inbound call voice menu
-1. Inbound bridging
+# EnableX Programmable Voice APIs Sample Client: Outbound and Inbound Voice Calls Demo
 
-## Prerequisite
-1. You will need Enablex Application credentials.
-1. You will need a Enablex Phone number.
-1. You will need a place for hosting this application either cloud or local machine.
+EnableX Programmable Voice API Sample: Client Application and Walkthrough 
+
+Explore this repository containing a sample application showcasing the capabilities of EnableX Programmable Voice APIs. This application provides demonstrations of various Programmable Voice API features, including: 
+Outbound play prompt 
+Outbound play voice menu 
+Outbound play text 
+Outbound call bridging 
+Inbound call voice menu 
+Inbound bridging 
+
+Prerequisites: 
+Obtain EnableX Application credentials. 
+Acquire an EnableX phone number. 
+Have a hosting environment, either in the cloud or on a local machine. 
 
 ## Installation
 ```
